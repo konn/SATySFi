@@ -1402,8 +1402,8 @@ and interpret env ast =
   | PrimitiveCharCode(astr) ->
       let str = interpret_string env astr in
       begin
-        try IntegerConstant(Char.code (String.get str 0)) with
-        | Invalid_argument _ -> raise(EvalError("Char code of empty string"))
+        try IntegerConstant(BatUChar.code (BatUTF8.get str 0)) with
+        | Invalid_argument _ -> raise(EvalError("Char code of empty string: " ^ str))
       end
 
   | PrimitiveArabic(astnum) ->
