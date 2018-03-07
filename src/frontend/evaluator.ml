@@ -1399,6 +1399,13 @@ and interpret env ast =
         pairlst |> make_list (fun (i, s) ->
           TupleCons(IntegerConstant(i), TupleCons(StringConstant(s), EndOfTuple)))
 
+  | PrimitiveCharCode(astr) ->
+      let str = interpret_string env astr in
+      begin
+        try IntegerConstant(Char.code (String.get str 0)) with
+        | Invalid_argument _ -> raise(EvalError("Char code of empty string"))
+      end
+
   | PrimitiveArabic(astnum) ->
       let num = interpret_int env astnum in StringConstant(string_of_int num)
 

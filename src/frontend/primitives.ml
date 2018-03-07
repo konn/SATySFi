@@ -635,6 +635,7 @@ let make_environments () =
         ( "string-sub"   , ~% (tS @-> tI @-> tI @-> tS), lambda3 (fun vstr vpos vwid -> PrimitiveStringSub(vstr, vpos, vwid)) );
         ( "string-byte-length", ~% (tS @-> tI)              , lambda1 (fun vstr -> PrimitiveStringByteLength(vstr)) );
         ( "string-length", ~% (tS @-> tI)              , lambda1 (fun vstr -> PrimitiveStringLength(vstr)) );
+        ( "char-code"    , ~% (tS @-> tI)         , lambda1 (fun vstr -> PrimitiveCharCode(vstr)) );
         ( "arabic"       , ~% (tI @-> tS)              , lambda1 (fun vnum -> PrimitiveArabic(vnum)) );
         ( "float"        , ~% (tI @-> tFL)             , lambda1 (fun vi -> PrimitiveFloat(vi)) );
         ( "round"        , ~% (tFL @-> tI)             , lambda1 (fun vf -> PrimitiveRound(vf)) );
