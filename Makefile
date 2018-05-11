@@ -4,24 +4,18 @@ SRCROOT=src
 BACKEND=src/backend
 FRONTEND=src/frontend
 CHARDECODER=src/chardecoder
-EXTERNAL=external
 OCB_FLAGS = -cflags -unsafe-string -cflag -w -cflag -3 \
 	-use-ocamlfind -use-menhir \
 	-I $(SRCROOT)/ -I $(FRONTEND)/ -I $(BACKEND)/ -I $(CHARDECODER)/ \
-	-I $(EXTERNAL)/otfm/src/ -I $(EXTERNAL)/camlpdf/ \
-	-pkgs "str,ppx_deriving.show,core_kernel,result,uutf,batteries, \
-	menhirLib,yojson,camlimages,camlimages.jpeg" \
-	-tag thread -yaccflags "--table --explain" \
-	-lflags "flatestubs.c rijndael-alg-fst.c stubs-aes.c sha2.c stubs-sha2.c"
+	-pkgs "str,ppx_deriving.show,core_kernel,uutf,batteries, \
+	menhirLib,yojson,camlimages,camlimages.jpeg,otfm,camlpdf" \
+	-tag thread -yaccflags "--table --explain"
 TARGET=satysfi
 OCB = ocamlbuild $(OCB_FLAGS)
 BINDIR=$(PREFIX)/bin
 
 all:
-	[ -d .git ] && git submodule update -i || echo "Skip git submodule update -i"
 	mkdir -p _build/
-	cp $(EXTERNAL)/camlpdf/*.c _build/
-	cp $(EXTERNAL)/camlpdf/*.h _build/
 	$(OCB) main.native
 	mv main.native $(TARGET)
 
@@ -47,9 +41,14 @@ install: $(TARGET)
 lib:
 # -- downloads fonts --
 	mkdir -p temp/
-	wget -N http://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip -P temp/
+	if [ -x "$$(command -v curl)" ]; then \
+	  curl -R -o temp/lm2.004otf.zip http://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip; \
+	  curl -R -o temp/latinmodern-math-1959.zip http://www.gust.org.pl/projects/e-foundry/lm-math/download/latinmodern-math-1959.zip; \
+	else \
+	  wget -N http://www.gust.org.pl/projects/e-foundry/latin-modern/download/lm2.004otf.zip -P temp/; \
+	  wget -N http://www.gust.org.pl/projects/e-foundry/lm-math/download/latinmodern-math-1959.zip -P temp/; \
+        fi
 	unzip -o temp/lm2.004otf.zip -d lib-satysfi/dist/fonts/
-	wget -N http://www.gust.org.pl/projects/e-foundry/lm-math/download/latinmodern-math-1959.zip -P temp/
 	unzip -o temp/latinmodern-math-1959.zip -d temp/
 	cp temp/latinmodern-math-1959/otf/latinmodern-math.otf lib-satysfi/dist/fonts/
 
