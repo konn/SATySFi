@@ -2253,7 +2253,7 @@ params:
 code: |
   let bits =
     try numl lsr numr with
-      | Invalid_argument(s) -> raise (EvalError("Bit offset out of bounds for '>>'")) in
+      | Invalid_argument(s) -> report_dynamic_error "Bit offset out of bounds for '>>'" in
   IntegerConstant(bits)
 
 ---
@@ -2269,7 +2269,7 @@ params:
 code: |
   let bits =
     try numl lsl numr with
-      | Invalid_argument(s) -> raise (EvalError("Bit offset out of bounds for '<<'")) in
+      | Invalid_argument(s) -> report_dynamic_error "Bit offset out of bounds for '<<'" in
   IntegerConstant(bits)
 
 ---
@@ -2321,7 +2321,7 @@ type: |
 params:
 - num : int
 code: |
-  IntegerConstant(lnot numl)
+  IntegerConstant(lnot num)
 
 ---
 inst: FloatPlus
