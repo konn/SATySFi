@@ -1845,7 +1845,7 @@ params:
 code: |
   let resstr =
   try BatUTF8.sub str pos wid with
-  | Invalid_argument(s) -> raise (EvalError("illegal index for 'string-sub'"))
+  | Invalid_argument(s) -> report_dynamic_error "illegal index for string-sub"
   in
     StringConstant(resstr)
 
